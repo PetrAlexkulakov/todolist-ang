@@ -1,10 +1,15 @@
+import { TestBed } from "@angular/core/testing";
 import { LoggerService } from "./logger.service"
 
 describe('Logger tests', () => {
     let logger: LoggerService;
 
     beforeEach(() => {
-        logger = new LoggerService();
+        TestBed.configureTestingModule({
+            providers: [LoggerService]
+        });
+
+        logger = TestBed.inject(LoggerService);
     })
 
     it('should be created', () => {
@@ -41,6 +46,17 @@ describe('Logger tests', () => {
             '%c TestFile--Test info',
             'color: green',
             'AdditionalParam'
+        );
+    })
+
+    it(`should log '' if empty param`, () => {
+        spyOn(console, 'info');
+        logger.info('Test info', 'TestFile');
+
+        expect(console.info).toHaveBeenCalledWith(
+            '%c TestFile--Test info',
+            'color: green',
+            ''
         );
     })
 })
