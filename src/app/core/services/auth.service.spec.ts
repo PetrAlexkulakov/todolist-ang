@@ -79,7 +79,7 @@ describe('AuthService', () => {
         req.error(new ErrorEvent('error'));
   
         expect(authService.isAuth).toBeFalsy();
-        expect(notificationService.handleError).toHaveBeenCalled();//todo change this
+        expect(notificationService.handleError).toHaveBeenCalled();
     });
 
     it('should handle error in me() and call notificationService.handleError', () => {
