@@ -45,6 +45,18 @@ describe('AuthService', () => {
       expect(authService.isAuth).toBeTruthy();
     });
 
+    it('should handle error in me() and call notificationService.handleError for else branch', () => {
+      spyOn(notificationService, 'handleError');
+    
+      authService.me();
+    
+      const req = httpTestingController.expectOne(`${environment.baseUrl}/auth/me`);
+      req.error(new ErrorEvent('error'));//how does it work?
+    
+      expect(authService.isAuth).toBeFalsy();
+      expect(notificationService.handleError).toHaveBeenCalled();
+    });
+
     it('should navigate to "/" on successful login() call', () => {
       const loginData: LoginRequestData = {
         email: 'p-pup1@mail.ru',
@@ -60,26 +72,26 @@ describe('AuthService', () => {
 
     it('should navigate to "/login" on successful logout() call', () => {
       authService.logout();
-  
-      const req = httpTestingController.expectOne(`${environment.baseUrl}/auth/login`);
+    
+      const req = httpTestingController.expectOne(req => req.method === 'DELETE' && req.url === `${environment.baseUrl}/auth/login`);
       req.flush({ resultCode: ResultCodeEnum.success });
     });
 
     it('should handle error in login() and call notificationService.handleError', () => {
-        spyOn(notificationService, 'handleError');
-  
-        const loginData: LoginRequestData = {
-            email: 'wrongmail.ru',
-            password: "wrong",
-            rememberMe: false
-        }
-        authService.login(loginData);
-  
-        const req = httpTestingController.expectOne(`${environment.baseUrl}/auth/login`);
-        req.error(new ErrorEvent('error'));
-  
-        expect(authService.isAuth).toBeFalsy();
-        expect(notificationService.handleError).toHaveBeenCalled();
+      spyOn(notificationService, 'handleError');
+
+      const loginData: LoginRequestData = {
+          email: 'wrongmail.ru',
+          password: "wrong",
+          rememberMe: false
+      }
+      authService.login(loginData);
+
+      const req = httpTestingController.expectOne(`${environment.baseUrl}/auth/login`);
+      req.error(new ErrorEvent('error'));
+
+      expect(authService.isAuth).toBeFalsy();
+      expect(notificationService.handleError).toHaveBeenCalled();
     });
 
     it('should handle error in me() and call notificationService.handleError', () => {
