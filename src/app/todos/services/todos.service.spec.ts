@@ -98,10 +98,8 @@ describe('TodosService', () => {
     const mockTodoId = '1';
     const mockTitle = 'Updated Todo';
 
-    // Предполагаем, что текущее состояние todos$ содержит mockTodos
     service.todos$.next(mockTodos);
 
-    // Фейковый ответ от сервера
     const mockResponse = { resultCode: 0 };
 
     service.updateTodoTitle(mockTodoId, mockTitle);
@@ -111,14 +109,13 @@ describe('TodosService', () => {
 
     req.flush(mockResponse);
 
-    tick(); // Дождитесь завершения всех асинхронных операций
+    tick();
 
     service.todos$.subscribe(todos => {
       const updatedTodo = todos.find(todo => todo.id === mockTodoId);
       expect(updatedTodo).toBeTruthy();
       expect(updatedTodo?.title).toEqual(mockTitle);
 
-      // Проверьте, что другие todos не были изменены
       expect(todos.find(todo => todo.id === '2')?.title).toEqual('Todo 2');
     });
   }));
@@ -131,19 +128,17 @@ describe('TodosService', () => {
     const mockTodoId = '1';
     const mockFilter = 'completed';
 
-    // Предполагаем, что текущее состояние todos$ содержит mockTodos
     service.todos$.next(mockTodos);
 
     service.changeFilter(mockTodoId, mockFilter);
 
-    tick(); // Дождитесь завершения всех асинхронных операций
+    tick();
 
     service.todos$.subscribe(todos => {
       const updatedTodo = todos.find(todo => todo.id === mockTodoId);
       expect(updatedTodo).toBeTruthy();
       expect(updatedTodo?.filter).toEqual(mockFilter);
 
-      // Проверьте, что другие todos не были изменены
       expect(todos.find(todo => todo.id === '2')?.filter).toEqual('all');
     });
   }));

@@ -43,6 +43,23 @@ describe('TasksComponent', () => {
         expect(tasksServiceMock.getTasks).toHaveBeenCalledWith(component.todoId);
     });
 
+    
+    // it('should call tasksService.getTasks on ngOnInit', () => {
+    //     const mockTasks = [{ id: 'taskId1', status: TaskStatusEnum.completed }];
+    //     const mockTodos = [{ id: '1', filter: 'completed' }];
+
+    //     tasksServiceMock.getTasks.and.returnValue(of(mockTasks));
+    //     todosServiceMock.todos$.next(mockTodos);
+
+    //     component.ngOnInit();
+
+    //     expect(tasksServiceMock.getTasks).toHaveBeenCalledWith(component.todoId);
+    //     component.tasks$.subscribe((tasks) => {
+    //     expect(tasks.length).toBe(1);
+    //     expect(tasks[0].status).toBe(TaskStatusEnum.completed);
+    //     });
+    // });
+
     it('should call tasksService.addTask on addTaskHandler', () => {
         component.taskTitle = 'New Task';
         component.addTaskHandler();
