@@ -20,10 +20,33 @@ describe('MainService', () => {
     expect(service).toBeDefined()
   })
 
-  it('', () => {
+  it('should return value', () => {
+    expect(service.returnValue(3)).toBe(3)
+  })
+
+  it('should return string', () => {
     fakeOptionService.returnString.and.returnValue('Hi')
     const res = service.newMethod()
     expect(res).toBe('Hi')
     expect(fakeOptionService.returnString)
+  })
+})
+
+describe('OptionService', () => {
+  let service: OptionService
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [OptionService],
+    })
+    service = TestBed.inject(OptionService)
+  })
+
+  it('should created', () => {
+    expect(service).toBeDefined()
+  })
+
+  it('should return string', () => {
+    expect(service.returnString()).toBe('Hi')
   })
 })
