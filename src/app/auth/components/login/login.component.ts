@@ -1,6 +1,7 @@
 import { Component } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { AuthService } from 'src/app/core/services/auth.service'
+import { LoggerService } from 'src/app/shared/services/logger.service'
 
 @Component({
   selector: 'tl-login',
@@ -17,13 +18,15 @@ export class LoginComponent {
     rememberMe: new FormControl(false),
   })
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private logger: LoggerService) {}
 
   get email() {
+    this.logger.info('Getting email', 'login.component.ts')
     return this.loginForm.get('email')
   }
 
   get password() {
+    this.logger.info('Getting password', 'login.component.ts')
     return this.loginForm.get('password')
   }
 

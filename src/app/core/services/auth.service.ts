@@ -8,6 +8,7 @@ import { LoginRequestData, MeResponse } from 'src/app/core/models/auth.models'
 import { EMPTY } from 'rxjs'
 import { catchError } from 'rxjs/operators'
 import { NotificationService } from 'src/app/core/services/notification.service'
+import { LoggerService } from 'src/app/shared/services/logger.service'
 
 @Injectable()
 export class AuthService {
@@ -22,7 +23,8 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private logger: LoggerService
   ) {}
   login(data: LoginRequestData) {
     this.http
@@ -30,6 +32,7 @@ export class AuthService {
       .pipe(catchError(this.errorHandler.bind(this)))
       .subscribe(res => {
         if (res.resultCode === ResultCodeEnum.success) {
+          this.logger.info(`Successfully logged in`, 'auth.service.ts')
           this.router.navigate(['/'])
         } else {
           this.notificationService.handleError(res.messages[0])
@@ -42,8 +45,10 @@ export class AuthService {
       .pipe(catchError(this.errorHandler.bind(this)))
       .subscribe(res => {
         if (res.resultCode === ResultCodeEnum.success) {
+          this.logger.info(`Successfully logged out`, 'auth.service.ts')
           this.router.navigate(['/login'])
         }
+        this.logger.error(`Logged out error`, 'auth.service.ts')
       })
   }
 
@@ -53,6 +58,7 @@ export class AuthService {
       .pipe(catchError(this.errorHandler.bind(this)))
       .subscribe(res => {
         if (res.resultCode === ResultCodeEnum.success) {
+          this.logger.info(`Successfully got me()`, 'auth.service.ts')
           this.isAuth = true
         }
         this.resolveAuthRequest()

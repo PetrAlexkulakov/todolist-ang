@@ -10,14 +10,16 @@ import {
 import { environment } from 'src/environments/environment'
 import { map } from 'rxjs/operators'
 import { CommonResponseType } from 'src/app/core/models/core.models'
+import { LoggerService } from 'src/app/shared/services/logger.service'
 
 @Injectable({
   providedIn: 'root',
 })
 export class TasksService {
   tasks$ = new BehaviorSubject<DomainTask>({})
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private logger: LoggerService) {}
   getTasks(todoId: string) {
+    this.logger.info('Getting Tasks', 'tasks.service.ts');
     this.http
       .get<GetTasksResponse>(`${environment.baseUrl}/todo-lists/${todoId}/tasks`)
       .pipe(map(res => res.items))
@@ -28,6 +30,7 @@ export class TasksService {
       })
   }
   addTask(todoId: string, title: string) {
+    this.logger.info('Adding Tasks', 'tasks.service.ts', [...arguments]);
     this.http
       .post<CommonResponseType<{ item: Task }>>(
         `${environment.baseUrl}/todo-lists/${todoId}/tasks`,
@@ -47,6 +50,7 @@ export class TasksService {
       })
   }
   deleteTask(todoId: string, taskId: string) {
+    this.logger.info('Deletting Tasks', 'tasks.service.ts', [...arguments]);
     this.http
       .delete<CommonResponseType>(`${environment.baseUrl}/todo-lists/${todoId}/tasks/${taskId}`)
       .pipe(
@@ -63,6 +67,7 @@ export class TasksService {
   }
 
   updateTask(todoId: string, taskId: string, newTask: UpdateTaskRequest) {
+    this.logger.info('Updatting Tasks', 'tasks.service.ts', [...arguments]);
     this.http
       .put<CommonResponseType<{ item: Task }>>(
         `${environment.baseUrl}/todo-lists/${todoId}/tasks/${taskId}`,

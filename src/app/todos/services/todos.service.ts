@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs'
 import { DomainTodo, FilterType, Todo } from 'src/app/todos/models/todos.models'
 import { CommonResponseType } from 'src/app/core/models/core.models'
 import { map } from 'rxjs/operators'
+import { LoggerService } from 'src/app/shared/services/logger.service'
 
 @Injectable({
   providedIn: 'root',
@@ -12,9 +13,10 @@ import { map } from 'rxjs/operators'
 export class TodosService {
   todos$ = new BehaviorSubject<DomainTodo[]>([])
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private logger: LoggerService) {}
 
   getTodos() {
+    this.logger.info('Getting Todos', 'todos.service.ts')
     this.http
       .get<Todo[]>(`${environment.baseUrl}/todo-lists`)
       .pipe(
@@ -29,6 +31,7 @@ export class TodosService {
   }
 
   addTodo(title: string) {
+    this.logger.info('Adding Todos', 'todos.service.ts', [...arguments])
     this.http
       .post<
         CommonResponseType<{
@@ -49,6 +52,7 @@ export class TodosService {
   }
 
   deleteTodo(todoId: string) {
+    this.logger.info('Deleting Todos', 'todos.service.ts', [...arguments])
     this.http
       .delete<CommonResponseType>(`${environment.baseUrl}/todo-lists/${todoId}`)
       .pipe(
@@ -62,6 +66,7 @@ export class TodosService {
       })
   }
   updateTodoTitle(todoId: string, title: string) {
+    this.logger.info('Updatting Todos', 'todos.service.ts', [...arguments])
     this.http
       .put<CommonResponseType>(`${environment.baseUrl}/todo-lists/${todoId}`, { title })
       .pipe(
@@ -75,6 +80,7 @@ export class TodosService {
       })
   }
   changeFilter(todoId: string, filter: FilterType) {
+    this.logger.info('Changing Filter Todos', 'todos.service.ts', [...arguments])
     const stateTodos = this.todos$.getValue()
     const newTodos: DomainTodo[] = stateTodos.map(el => (el.id === todoId ? { ...el, filter } : el))
     this.todos$.next(newTodos)
